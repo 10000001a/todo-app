@@ -5,58 +5,52 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class TodoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todo)
 
-        findViewById<ListView>(R.id.todo_list_view).also {
-            it.adapter = TodoListViewAdapter(
-                ArrayList((0 until 40).map { "" + it + "번 할일" }), layoutInflater
-            )
+        findViewById<RecyclerView>(R.id.todo_recycler_view).also { it ->
+            it.adapter =
+                TodoAdapter(
+                    ArrayList((0 until 40).map { number -> "" + number + "번 할일" }),
+                    this@TodoActivity.layoutInflater
+                )
+
+            it.layoutManager = LinearLayoutManager(this@TodoActivity)
         }
     }
 }
 
-class TodoListViewAdapter(
-    private val todoList: ArrayList<String>, private val layoutInflater: LayoutInflater
-) : BaseAdapter() {
-    // ListView가 받는 item의 갯수를 반환합니다.
-    override fun getCount(): Int {
-        return todoList.size
-    }
+class TodoAdapter(
+    private val itemList: ArrayList<String>,
+    private val inflater: LayoutInflater
+) : RecyclerView.Adapter<TodoAdapter.TodoViewHolder>() {
 
-    // ListView의 p0번째 item의 View가 전달받을 값을 반환합니다.
-    override fun getItem(p0: Int): String {
-        return todoList[p0]
-    }
+    class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val todoNameView: TextView
 
-    // ListView의 각 item들은 고유 id를 필요로 하는데, 적절한 값을 반환합니다.
-    override fun getItemId(p0: Int): Long {
-        return p0.toLong()
-    }
-
-    // ListView의 item을 그릴 View를 반환합니다.
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View
-        val viewHolder: TodolistViewHolder
-
-        if (convertView == null) {
-            view = layoutInflater.inflate(R.layout.todo_item, null)
-            viewHolder = TodolistViewHolder(view.findViewById(R.id.todo_name))
-        } else {
-            view = convertView
-            viewHolder = convertView.tag as TodolistViewHolder
+        init {
+            todoNameView = itemView.findViewById(R.id.todo_name)
         }
+    }
 
-        viewHolder.todoNameView?.text = getItem(position)
-        return view.also { it.tag = viewHolder }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
+        Log.d("Test", "viewType$viewType")
+        return TodoViewHolder(inflater.inflate(R.layout.todo_item, parent, false))
+    }
+
+    override fun getItemCount(): Int {
+        return itemList.size
+    }
+
+    override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
+        Log.d("Test", "position: " + position + "  text: " + holder.todoNameView.text.toString())
+        holder.todoNameView.text = itemList[position]
     }
 }
-
-class TodolistViewHolder(var todoNameView: TextView?)

@@ -5,8 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".TodoActivity">
 
-    <ListView
-        android:id="@+id/todo_list_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todo_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
