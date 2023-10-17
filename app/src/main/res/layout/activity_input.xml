@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.example.todoapp.InputViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +26,8 @@
                 android:id="@+id/addTodoTitleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="할일">
+                android:hint="할일"
+                android:text="@{viewModel.state.title}">
 
                 <requestFocus />
             </com.google.android.material.textfield.TextInputEditText>
@@ -47,7 +50,8 @@
                 android:layout_height="match_parent"
                 android:hint="설명"
                 android:imeOptions="actionDone"
-                android:inputType="text">
+                android:inputType="text"
+                android:text="@{viewModel.state.description}">
 
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
@@ -56,6 +60,8 @@
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="@{!viewModel.state.title.empty}"
+            android:onClick="@{ () -> viewModel.insertTodo()}"
             android:paddingHorizontal="16dp"
             android:paddingVertical="8dp"
             android:text="추가하기"
