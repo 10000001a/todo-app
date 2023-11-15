@@ -10,7 +10,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class InputState(val title: String, val description: String)
+data class InputState(
+    val title: String,
+    val description: String,
+    val success: Boolean = false
+)
 
 @HiltViewModel
 class InputViewModel @Inject constructor(private val todoRepository: TodoRepository) : ViewModel() {
@@ -34,7 +38,7 @@ class InputViewModel @Inject constructor(private val todoRepository: TodoReposit
                 )
             )
 
-            state.value = InputState("", "")
+            state.emit(state.value.copy(success = true))
         }
     }
 }
